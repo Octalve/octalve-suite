@@ -2002,13 +2002,20 @@
 
 
 
+
+
+
+
+
+
+
+
+
         (function () {
             const section = document.getElementById('tSection');
             if (!section) return;
 
             // ===== DATA (replace placeholders later) =====
-
-
             const items = [
                 {
                     id: 'adam',
@@ -2027,11 +2034,6 @@
                     sideBg: '#0f766e',
                     sideImage: '/brand/client/drronkenow.png'
                 },
-
-
-                // Second testimonial
-
-
                 {
                     id: 'deon',
                     name: 'Haleemah Abdul Azeez',
@@ -2049,11 +2051,6 @@
                     sideBg: '#7c6a58',
                     sideImage: '/brand/client/halimah.png'
                 },
-
-
-                // Third testimonial
-
-
                 {
                     id: 'alex',
                     name: 'Sarah Akerele',
@@ -2086,9 +2083,9 @@
             const btnNext = document.getElementById('tNext');
 
             function mobileSlideHTML(it, idx) {
-                // Mobile matches your screenshot: media top, quote below.
-                const mediaBlock = it.mediaType === 'video'
-                    ? `
+                const mediaBlock =
+                    it.mediaType === 'video'
+                        ? `
           <div class="rounded-[40px] bg-black p-3">
             <div class="rounded-[32px] overflow-hidden bg-black relative">
               <img
@@ -2109,7 +2106,7 @@
             </div>
           </div>
         `
-                    : `
+                        : `
           <div class="rounded-[40px] overflow-hidden border border-black/10" style="background:${it.imageBoxBg || '#e7cdb4'};">
             <div class="relative">
               <img
@@ -2164,14 +2161,16 @@
 
                 // dots
                 dots.innerHTML = items
-                    .map((_, i) => `
+                    .map(
+                        (_, i) => `
           <button
             type="button"
             class="tDot h-2.5 w-2.5 rounded-full bg-black/20"
             data-dot="${i}"
             aria-label="Go to slide ${i + 1}"
           ></button>
-        `)
+        `
+                    )
                     .join('');
 
                 // dot click
@@ -2211,9 +2210,8 @@
                 const slides = slider.querySelectorAll('.tSlide');
                 const io = new IntersectionObserver(
                     (entries) => {
-                        // pick the most visible
                         const visible = entries
-                            .filter(e => e.isIntersecting)
+                            .filter((e) => e.isIntersecting)
                             .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
                         if (!visible) return;
@@ -2227,15 +2225,23 @@
                     { root: slider, threshold: [0.55, 0.7] }
                 );
 
-                slides.forEach(s => io.observe(s));
+                slides.forEach((s) => io.observe(s));
                 updateDots();
             }
 
-            function scrollToMobile(idx) {
+            // FIXED: ONLY scroll the slider container (not the page)
+            function scrollToMobile(idx, smooth) {
                 if (!slider) return;
+
                 const target = slider.querySelector(`.tSlide[data-idx="${idx}"]`);
                 if (!target) return;
-                target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
+                const left = target.offsetLeft - (slider.clientWidth - target.clientWidth) / 2;
+
+                slider.scrollTo({
+                    left: Math.max(0, left),
+                    behavior: smooth ? 'smooth' : 'auto'
+                });
             }
 
             function updateDots() {
@@ -2270,7 +2276,6 @@
             const elImage = document.getElementById('tImage');
             const elBrandLogo = document.getElementById('tBrandLogo');
 
-            // Create persistent side cards so we can move them L/R
             const sideNodes = items.map((it, idx) => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
@@ -2299,8 +2304,7 @@
                 return btn;
             });
 
-            // Park all initially
-            if (elHidden) sideNodes.forEach(n => elHidden.appendChild(n));
+            if (elHidden) sideNodes.forEach((n) => elHidden.appendChild(n));
 
             function placeSideCards() {
                 if (!elLeft || !elRight || !elHidden) return;
@@ -2315,29 +2319,24 @@
                 elRight.classList.toggle('hidden', elRight.children.length === 0);
             }
 
-            // Desktop: render main card
             let currentVideoLoaded = false;
 
             function setMain(direction) {
                 const it = items[active];
 
-                // animate out
                 elMain.classList.add('opacity-0');
                 elMain.style.transform = `translateX(${direction === 'right' ? '-10px' : '10px'})`;
 
                 setTimeout(() => {
-                    // background + quote
                     elMain.style.background = it.mainBg;
                     elQuoteMark.style.color = it.quoteMark;
 
-                    // text
                     elQuote.textContent = it.quote;
                     elName.textContent = it.name;
                     elRolePrefix.textContent = it.rolePrefix + ' ';
                     elCompany.textContent = it.company;
                     elCompany.href = it.companyHref || '#';
 
-                    // media
                     currentVideoLoaded = false;
 
                     if (it.mediaType === 'video') {
@@ -2347,8 +2346,7 @@
                         elVideoThumb.src = it.videoThumb || 'https://placehold.co/1200x900/png?text=Video+Thumbnail';
                         elVideoOverlayLogo.src = it.videoOverlayLogo || 'https://placehold.co/220x70/png?text=Overlay+Logo';
 
-                        // reset play area back to thumb (if previously replaced)
-                        const container = elPlayBtn.closest('.rounded-\\[32px\\]');
+                        const container = elPlayBtn ? elPlayBtn.closest('.rounded-\\[32px\\]') : null;
                         if (container) {
                             container.innerHTML = `
               <img id="tVideoThumb" src="${elVideoThumb.src}" alt="Video thumbnail placeholder" class="w-full h-[420px] object-cover opacity-90" />
@@ -2366,7 +2364,6 @@
                         elBrandLogo.src = it.brandLogo || 'https://placehold.co/160x60/png?text=Brand';
                     }
 
-                    // animate in
                     requestAnimationFrame(() => {
                         elMain.classList.remove('opacity-0');
                         elMain.style.transform = 'translateX(0)';
@@ -2374,7 +2371,6 @@
                 }, 240);
             }
 
-            // Side click -> go active
             sideNodes.forEach((node) => {
                 node.addEventListener('click', () => {
                     const idx = Number(node.dataset.idx);
@@ -2388,6 +2384,10 @@
             let active = 0;
             let timer = null;
 
+            // FIX: prevent repeated "resize" (mobile address bar) from forcing paint + scroll
+            let hasActivated = false;
+            let lastMode = isDesktop() ? 'desktop' : 'mobile';
+
             function goTo(idx, userAction) {
                 if (idx === active) return;
                 const direction = idx > active ? 'right' : 'left';
@@ -2398,7 +2398,7 @@
                     setMain(direction);
                 } else {
                     updateDots();
-                    scrollToMobile(active);
+                    scrollToMobile(active, true); // smooth inside slider only
                 }
 
                 if (userAction) restartTimer();
@@ -2422,7 +2422,6 @@
                 startTimer();
             }
 
-            // Pause auto-rotate when user hovers desktop deck
             const deck = document.getElementById('tDeck');
             if (deck) {
                 deck.addEventListener('mouseenter', stopTimer);
@@ -2432,11 +2431,10 @@
             // Init: render mobile slides once
             renderMobile();
 
-            // Play desktop video inline when clicking play 
+            // Play desktop video inline when clicking play
             section.addEventListener('click', (e) => {
                 const play = e.target.closest('#tPlayBtn');
                 if (!play) return;
-
                 if (!isDesktop()) return;
 
                 const it = items[active];
@@ -2458,38 +2456,76 @@
                 restartTimer();
             });
 
-            // First paint based on viewport
             function paintInitial() {
                 if (isDesktop()) {
                     placeSideCards();
                     setMain('right');
                 } else {
                     updateDots();
-                    scrollToMobile(active);
+                    scrollToMobile(active, false); // auto (no page jump)
                 }
             }
 
             // Start only when visible
-            const io = new IntersectionObserver((entries) => {
-                entries.forEach(en => {
-                    if (!en.isIntersecting) return;
-                    paintInitial();
-                    startTimer();
-                    io.disconnect();
-                });
-            }, { threshold: 0.15 });
+            const io = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((en) => {
+                        if (!en.isIntersecting) return;
+
+                        hasActivated = true; // FIX
+                        lastMode = isDesktop() ? 'desktop' : 'mobile';
+
+                        paintInitial();
+                        startTimer();
+                        io.disconnect();
+                    });
+                },
+                { threshold: 0.15 }
+            );
 
             io.observe(section);
 
-            // On resize, re-sync layout (desktop <-> mobile)
+            // On resize: ONLY repaint if mode changes (desktop <-> mobile)
             let resizeLock = null;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeLock);
                 resizeLock = setTimeout(() => {
+                    if (!hasActivated) return;
+
+                    const mode = isDesktop() ? 'desktop' : 'mobile';
+                    if (mode === lastMode) return; // ignore mobile address-bar resize noise
+
+                    lastMode = mode;
                     paintInitial();
-                }, 120);
+                }, 150);
             });
         })();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         //        // ========================= FAQ Accordion + Show More =========================  
