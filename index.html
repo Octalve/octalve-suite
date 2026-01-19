@@ -104,12 +104,151 @@
 
                     <!-- CTA Buttons -->
                     <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2">
-                        <a href="#"
+                        <!-- <a href="#"
                             class="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-extrabold text-white transition hover:opacity-90"
                             style="background:#0064E0;">
                             Create a Free Account
                             <span class="icon text-base">chevron_right</span>
+                        </a> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        <!-- Button -->
+                        <a href="#" id="openCalendly"
+                            class="inline-flex items-center justify-center gap-2 rounded-full bg-black text-white px-7 py-3 font-bold shadow-sm hover:opacity-90 transition"
+                            style="background:#0064E0;">
+                            Free 30min. Call <span aria-hidden="true">›</span>
                         </a>
+
+                        <!-- Modal (Calendly iframe) -->
+                        <div id="calendlyModal" class="fixed inset-0 z-[9999] hidden" aria-hidden="true" role="dialog"
+                            aria-modal="true" aria-label="Book a call">
+                            <!-- Backdrop (solid + blur) -->
+                            <div class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
+
+                            <!-- Modal Card -->
+                            <div class="relative flex min-h-full items-center justify-center p-4 sm:p-6">
+                                <div
+                                    class="relative w-full max-w-4xl overflow-hidden rounded-3xl bg-white shadow-[0_30px_100px_rgba(0,0,0,0.35)] ring-1 ring-black/10">
+                                    <!-- Header -->
+                                    <div
+                                        class="flex items-center justify-between border-b border-slate-200 px-4 py-3 sm:px-6">
+                                        <div class="text-sm font-semibold text-slate-900">Book a Free 30-minute Call
+                                        </div>
+
+                                        <!-- Close button (ONLY way to close) -->
+                                        <button type="button" id="closeCalendly"
+                                            class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-200 focus:outline-none focus:ring-4 focus:ring-slate-200"
+                                            aria-label="Close modal">
+                                            Close
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                aria-hidden="true">
+                                                <path d="M18 6L6 18" stroke="currentColor" stroke-width="2.4"
+                                                    stroke-linecap="round" />
+                                                <path d="M6 6l12 12" stroke="currentColor" stroke-width="2.4"
+                                                    stroke-linecap="round" />
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                    <!-- Body -->
+                                    <div class="relative">
+                                        <!-- Responsive height area for iframe -->
+                                        <div class="h-[78vh] min-h-[520px] w-full">
+                                            <iframe id="calendlyFrame" title="Calendly booking" class="h-full w-full"
+                                                src="" frameborder="0" loading="lazy"
+                                                allow="camera; microphone; fullscreen"></iframe>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <script>
+                            (function () {
+                                const modal = document.getElementById("calendlyModal");
+                                const openBtn = document.getElementById("openCalendly");
+                                const closeBtn = document.getElementById("closeCalendly");
+                                const frame = document.getElementById("calendlyFrame");
+
+                                const CALENDLY_URL = "https://calendly.com/octalve-info/30min";
+
+                                if (!modal || !openBtn || !closeBtn || !frame) return;
+
+                                function openModal() {
+                                    // Set src only when opening (faster initial page load)
+                                    frame.src = CALENDLY_URL;
+
+                                    modal.classList.remove("hidden");
+                                    modal.setAttribute("aria-hidden", "false");
+
+                                    // Prevent background scroll
+                                    document.documentElement.classList.add("overflow-hidden");
+                                    document.body.classList.add("overflow-hidden");
+
+                                    // Focus close for accessibility
+                                    closeBtn.focus();
+                                }
+
+                                function closeModal() {
+                                    modal.classList.add("hidden");
+                                    modal.setAttribute("aria-hidden", "true");
+
+                                    // Remove iframe src to stop audio/network + reset state
+                                    frame.src = "";
+
+                                    // Restore background scroll
+                                    document.documentElement.classList.remove("overflow-hidden");
+                                    document.body.classList.remove("overflow-hidden");
+
+                                    // Return focus to button
+                                    openBtn.focus();
+                                }
+
+                                openBtn.addEventListener("click", (e) => {
+                                    e.preventDefault();
+                                    openModal();
+                                });
+
+                                // ONLY close by clicking Close button
+                                closeBtn.addEventListener("click", closeModal);
+
+                                // Explicitly DO NOT close on backdrop click or Esc:
+                                // - No backdrop listener
+                                // - Block Escape key closing
+                                document.addEventListener("keydown", (e) => {
+                                    if (!modal.classList.contains("hidden") && e.key === "Escape") {
+                                        // do nothing intentionally
+                                        e.preventDefault();
+                                    }
+                                });
+                            })();
+                        </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                         <a href="#"
                             class="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-extrabold bg-white transition hover:bg-white/80 soft-border">
