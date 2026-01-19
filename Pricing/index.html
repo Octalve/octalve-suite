@@ -86,6 +86,510 @@
 
 
 
+    <!-- Pricing Comparison (Launch / Impact / Growth) — HTML + TailwindCSS + Vanilla JS
+     - Desktop: comparison table (like your screenshot)
+     - Mobile: tabs + stacked feature list (best mobile UX)
+     - Price editor is at the TOP (editable inputs update all prices live)
+-->
+
+    <section id="pricing" class="bg-white">
+        <div class="mx-auto max-w-7xl px-5 py-14 sm:px-6 sm:py-16 lg:py-24">
+            <!-- Title -->
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+                    Plans & Pricing
+                </h2>
+                <p class="mt-3 text-base text-slate-600">
+                    Compare what you get across Launch Suite, Impact Suite, and Growth Suite.
+                </p>
+            </div>
+
+            <!-- PRICE EDITOR (Top) -->
+            <div class="mt-10 rounded-3xl bg-slate-50 p-5 ring-1 ring-black/5 sm:p-6">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <div class="text-sm font-extrabold text-slate-900">Edit prices (top controls)</div>
+                        <div class="mt-1 text-xs text-slate-600">Change values below — the UI updates instantly.</div>
+                    </div>
+
+                    <div class="grid w-full gap-3 sm:max-w-4xl sm:grid-cols-3">
+                        <!-- Launch -->
+                        <div class="rounded-2xl bg-white p-3 ring-1 ring-black/5">
+                            <div class="flex items-center justify-between">
+                                <div class="text-xs font-bold text-red-600">Launch Suite</div>
+                                <div class="text-[11px] font-semibold text-slate-500">One-time</div>
+                            </div>
+                            <div class="mt-2 flex items-center gap-2">
+                                <span class="text-sm font-bold text-slate-900">$</span>
+                                <input id="price-launch" type="number" inputmode="numeric"
+                                    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-900 outline-none focus:ring-4 focus:ring-red-200"
+                                    value="997" />
+                            </div>
+                        </div>
+
+                        <!-- Impact -->
+                        <div class="rounded-2xl bg-white p-3 ring-1 ring-black/5">
+                            <div class="flex items-center justify-between">
+                                <div class="text-xs font-bold text-green-600">Impact Suite</div>
+                                <div class="text-[11px] font-semibold text-slate-500">One-time</div>
+                            </div>
+                            <div class="mt-2 flex items-center gap-2">
+                                <span class="text-sm font-bold text-slate-900">$</span>
+                                <input id="price-impact" type="number" inputmode="numeric"
+                                    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-900 outline-none focus:ring-4 focus:ring-green-200"
+                                    value="1299" />
+                            </div>
+                        </div>
+
+                        <!-- Growth -->
+                        <div class="rounded-2xl bg-white p-3 ring-1 ring-black/5">
+                            <div class="flex items-center justify-between">
+                                <div class="text-xs font-bold text-blue-600">Growth Suite</div>
+                                <div class="text-[11px] font-semibold text-slate-500">Monthly</div>
+                            </div>
+                            <div class="mt-2 flex items-center gap-2">
+                                <span class="text-sm font-bold text-slate-900">$</span>
+                                <input id="price-growth" type="number" inputmode="numeric"
+                                    class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-900 outline-none focus:ring-4 focus:ring-blue-200"
+                                    value="299" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MOBILE TABS (best mobile view) -->
+            <div class="mt-10 lg:hidden">
+                <div class="mx-auto max-w-xl">
+                    <div role="tablist" aria-label="Pricing tabs"
+                        class="flex items-center justify-center gap-2 overflow-x-auto rounded-2xl bg-slate-50 p-2 ring-1 ring-black/5">
+                        <button
+                            class="price-tab flex-none rounded-xl px-4 py-2 text-sm font-bold text-slate-700 hover:bg-white"
+                            data-plan="launch" aria-selected="true" role="tab">
+                            Launch
+                        </button>
+                        <button
+                            class="price-tab flex-none rounded-xl px-4 py-2 text-sm font-bold text-slate-700 hover:bg-white"
+                            data-plan="impact" aria-selected="false" role="tab">
+                            Impact
+                        </button>
+                        <button
+                            class="price-tab flex-none rounded-xl px-4 py-2 text-sm font-bold text-slate-700 hover:bg-white"
+                            data-plan="growth" aria-selected="false" role="tab">
+                            Growth
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Active Plan Card (mobile) -->
+                <div class="mt-6 rounded-3xl bg-white p-6 shadow-[0_15px_60px_rgba(0,0,0,0.06)] ring-1 ring-black/5">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <div id="mPlanName" class="text-lg font-extrabold text-slate-900">Launch Suite</div>
+                            <div class="mt-1 text-sm font-semibold text-slate-600">
+                                <span id="mPrice" class="text-slate-900">$997</span>
+                                <span id="mPeriod" class="text-slate-500">/ one-time</span>
+                            </div>
+                        </div>
+
+                        <a id="mCta" href="#contact"
+                            class="inline-flex items-center justify-center rounded-full bg-black px-5 py-2.5 text-sm font-bold text-white hover:opacity-90">
+                            Choose Plan
+                        </a>
+                    </div>
+
+                    <!-- Mobile features -->
+                    <div id="mobileFeatures" class="mt-6 space-y-6"></div>
+                </div>
+            </div>
+
+            <!-- DESKTOP COMPARISON TABLE -->
+            <div class="mt-12 hidden lg:block">
+                <div
+                    class="overflow-hidden rounded-3xl bg-white shadow-[0_15px_70px_rgba(0,0,0,0.06)] ring-1 ring-black/5">
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-[980px] border-separate border-spacing-0">
+                            <!-- Header row with plans -->
+                            <thead>
+                                <tr class="bg-white">
+                                    <th class="w-[44%] px-8 py-8 text-left align-top">
+                                        <div class="text-sm font-semibold text-slate-500">Compare features</div>
+                                    </th>
+
+                                    <!-- Launch -->
+                                    <th class="w-[18.66%] px-6 py-8 text-center align-top">
+                                        <div class="mx-auto max-w-[220px]">
+                                            <div class="text-sm font-extrabold text-slate-900">Launch Suite</div>
+                                            <div class="mt-2 text-2xl font-extrabold text-slate-900">
+                                                <span class="price-value" data-price-for="launch">$997</span>
+                                                <span class="text-sm font-semibold text-slate-500">/ one-time</span>
+                                            </div>
+                                            <a href="#contact"
+                                                class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-red-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-red-700">
+                                                Choose Plan
+                                                <span aria-hidden="true">›</span>
+                                            </a>
+                                        </div>
+                                    </th>
+
+                                    <!-- Impact -->
+                                    <th class="w-[18.66%] px-6 py-8 text-center align-top">
+                                        <div class="mx-auto max-w-[220px]">
+                                            <div class="text-sm font-extrabold text-slate-900">Impact Suite</div>
+                                            <div class="mt-2 text-2xl font-extrabold text-slate-900">
+                                                <span class="price-value" data-price-for="impact">$1299</span>
+                                                <span class="text-sm font-semibold text-slate-500">/ one-time</span>
+                                            </div>
+                                            <a href="#contact"
+                                                class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-green-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-green-700">
+                                                Choose Plan
+                                                <span aria-hidden="true">›</span>
+                                            </a>
+                                        </div>
+                                    </th>
+
+                                    <!-- Growth -->
+                                    <th class="w-[18.66%] px-6 py-8 text-center align-top">
+                                        <div class="mx-auto max-w-[220px]">
+                                            <div class="text-sm font-extrabold text-slate-900">Growth Suite</div>
+                                            <div class="mt-2 text-2xl font-extrabold text-slate-900">
+                                                <span class="price-value" data-price-for="growth">$299</span>
+                                                <span class="text-sm font-semibold text-slate-500">/ month</span>
+                                            </div>
+                                            <a href="#contact"
+                                                class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-blue-700">
+                                                Choose Plan
+                                                <span aria-hidden="true">›</span>
+                                            </a>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="compareBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        (function () {
+            // -----------------------------
+            // Data model (easy to tweak)
+            // -----------------------------
+            const plans = {
+                launch: { name: "Launch Suite", color: "red", period: "one-time", price: 997, cta: "#contact" },
+                impact: { name: "Impact Suite", color: "green", period: "one-time", price: 1299, cta: "#contact" },
+                growth: { name: "Growth Suite", color: "blue", period: "month", price: 299, cta: "#contact" },
+            };
+
+            // Sections + comparison features (mapped from your content)
+            const sections = [
+                {
+                    title: "Strategy & Brand",
+                    rows: [
+                        { label: "Discovery / Strategy (Phase 1)", launch: true, impact: true, growth: true, info: "Positioning, audience, roadmap." },
+                        { label: "Brand Identity (Phase 2)", launch: true, impact: true, growth: true, info: "Logo suite + colors + typography." },
+                        { label: "Mini Brand Guideline", launch: true, impact: true, growth: true },
+                        { label: "Social Profile Kit (DP + banners + templates)", launch: true, impact: false, growth: true },
+                        { label: "Letterhead + ID card/badge", launch: false, impact: true, growth: false },
+                    ],
+                },
+                {
+                    title: "Website & Integrations",
+                    rows: [
+                        { label: "Website Design & Build (Mobile-first)", launch: true, impact: true, growth: true },
+                        { label: "Basic SEO + Speed Setup", launch: true, impact: true, growth: true },
+                        { label: "WhatsApp click-to-chat + Forms + Map embed", launch: true, impact: true, growth: true },
+                        { label: "Donation-friendly website structure", launch: false, impact: true, growth: false },
+                        { label: "Recurring donation option + donor email copy", launch: false, impact: true, growth: false },
+                    ],
+                },
+                {
+                    title: "Content & Launch Support",
+                    rows: [
+                        { label: "14 branded post designs (starter pack)", launch: true, impact: false, growth: false },
+                        { label: "5 story templates + ad-ready creatives", launch: true, impact: false, growth: false },
+                        { label: "Caption prompts + posting plan", launch: true, impact: false, growth: true, info: "Growth includes ongoing prompts via tiers." },
+                        { label: "Go-live support + basic tracking guidance", launch: true, impact: true, growth: true },
+                        { label: "Handoff (assets + usage guide)", launch: true, impact: true, growth: true },
+                    ],
+                },
+                {
+                    title: "Payments & Impact (Impact Suite)",
+                    rows: [
+                        { label: "Payment Integration (Paystack/Flutterwave/PayPal)", launch: false, impact: true, growth: true, info: "Growth can include as a website update task." },
+                        { label: "Proof of payment flow (simple form)", launch: false, impact: true, growth: true },
+                        { label: "Donation tracking sheet template", launch: false, impact: true, growth: true },
+                        { label: "Impact report template (monthly/quarterly)", launch: false, impact: true, growth: false },
+                        { label: "Volunteer signup form + database capture", launch: false, impact: true, growth: true },
+                        { label: "Newsletter integration basics (Mailchimp/Brevo)", launch: false, impact: true, growth: true },
+                    ],
+                },
+                {
+                    title: "Growth Subscription (Monthly Retainer)",
+                    rows: [
+                        { label: "Monthly design delivery (8–16 designs)", launch: false, impact: false, growth: true, info: "Tier A/B/C scaling." },
+                        { label: "Monthly strategy call (30 mins)", launch: false, impact: false, growth: true },
+                        { label: "Website updates per month (2–6 changes)", launch: false, impact: false, growth: true },
+                        { label: "Monthly performance snapshot/report", launch: false, impact: false, growth: true },
+                        { label: "Ads add-on support (copy + creatives + tracking)", launch: false, impact: false, growth: true, info: "Ads spend charged separately." },
+                    ],
+                },
+            ];
+
+            // -----------------------------
+            // Helpers (icons + tooltips)
+            // -----------------------------
+            const iconYes = (color) => {
+                const colorMap = { red: "#dc2626", green: "#16a34a", blue: "#2563eb" };
+                const stroke = colorMap[color] || "#16a34a";
+                return `
+        <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M20 6L9 17l-5-5" stroke="${stroke}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      `;
+            };
+
+            const iconNo = () => `
+      <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M18 6L6 18" stroke="#f97316" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M6 6l12 12" stroke="#f97316" stroke-width="2.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+    `;
+
+            const infoIcon = (text) => `
+      <span class="relative inline-flex items-center">
+        <button type="button"
+          class="ml-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-[11px] font-extrabold text-slate-700 hover:bg-slate-200"
+          data-tooltip="${encodeURIComponent(text)}"
+          aria-label="Info"
+        >i</button>
+      </span>
+    `;
+
+            function money(n) {
+                // Keep it simple: $ + integer. You can swap to Intl.NumberFormat if needed.
+                return "$" + String(Math.round(Number(n) || 0));
+            }
+
+            // -----------------------------
+            // Render DESKTOP table
+            // -----------------------------
+            const compareBody = document.getElementById("compareBody");
+            if (compareBody) {
+                const rowsHtml = [];
+
+                sections.forEach((sec) => {
+                    rowsHtml.push(`
+          <tr>
+            <td colspan="4" class="bg-slate-50 px-8 py-4 text-sm font-extrabold text-slate-900">
+              ${sec.title}
+            </td>
+          </tr>
+        `);
+
+                    sec.rows.forEach((r) => {
+                        const label = r.label + (r.info ? infoIcon(r.info) : "");
+                        rowsHtml.push(`
+            <tr class="border-t border-slate-200/70">
+              <td class="px-8 py-5 text-sm font-semibold text-slate-800">
+                <div class="flex items-center">
+                  <span>${label}</span>
+                </div>
+              </td>
+
+              <td class="px-6 py-5 text-center">
+                ${r.launch ? iconYes(plans.launch.color) : iconNo()}
+              </td>
+
+              <td class="px-6 py-5 text-center">
+                ${r.impact ? iconYes(plans.impact.color) : iconNo()}
+              </td>
+
+              <td class="px-6 py-5 text-center">
+                ${r.growth ? iconYes(plans.growth.color) : iconNo()}
+              </td>
+            </tr>
+          `);
+                    });
+                });
+
+                compareBody.innerHTML = rowsHtml.join("");
+            }
+
+            // -----------------------------
+            // Tooltips (desktop)
+            // -----------------------------
+            let tipEl = null;
+            function showTip(btn) {
+                const raw = btn.getAttribute("data-tooltip");
+                if (!raw) return;
+                const text = decodeURIComponent(raw);
+
+                if (!tipEl) {
+                    tipEl = document.createElement("div");
+                    tipEl.className =
+                        "fixed z-[9999] max-w-[260px] rounded-xl bg-slate-900 px-3 py-2 text-xs font-semibold text-white shadow-lg";
+                    document.body.appendChild(tipEl);
+                }
+
+                tipEl.textContent = text;
+
+                const r = btn.getBoundingClientRect();
+                const x = Math.min(window.innerWidth - 16, Math.max(16, r.left + r.width / 2));
+                const y = r.top - 10;
+
+                tipEl.style.left = x + "px";
+                tipEl.style.top = y + "px";
+                tipEl.style.transform = "translate(-50%, -100%)";
+                tipEl.style.display = "block";
+            }
+
+            function hideTip() {
+                if (tipEl) tipEl.style.display = "none";
+            }
+
+            document.addEventListener("mouseover", (e) => {
+                const btn = e.target.closest("[data-tooltip]");
+                if (btn) showTip(btn);
+            });
+            document.addEventListener("mouseout", (e) => {
+                const btn = e.target.closest("[data-tooltip]");
+                if (btn) hideTip();
+            });
+            document.addEventListener("scroll", hideTip, { passive: true });
+
+            // -----------------------------
+            // Price editor (top inputs) -> update all displays
+            // -----------------------------
+            const priceInputs = {
+                launch: document.getElementById("price-launch"),
+                impact: document.getElementById("price-impact"),
+                growth: document.getElementById("price-growth"),
+            };
+
+            function updatePriceDisplays() {
+                // Desktop header prices
+                document.querySelectorAll(".price-value").forEach((el) => {
+                    const key = el.getAttribute("data-price-for");
+                    if (!key || !plans[key]) return;
+                    el.textContent = money(plans[key].price);
+                });
+
+                // Mobile header price
+                const active = document.querySelector(".price-tab[aria-selected='true']")?.getAttribute("data-plan") || "launch";
+                const mPrice = document.getElementById("mPrice");
+                const mPeriod = document.getElementById("mPeriod");
+                if (mPrice) mPrice.textContent = money(plans[active].price);
+                if (mPeriod) mPeriod.textContent = " / " + (plans[active].period === "month" ? "month" : "one-time");
+            }
+
+            Object.entries(priceInputs).forEach(([key, input]) => {
+                if (!input) return;
+                input.addEventListener("input", () => {
+                    plans[key].price = Number(input.value || 0);
+                    updatePriceDisplays();
+                    renderMobileFeatures(getActivePlan());
+                });
+            });
+
+            // -----------------------------
+            // Mobile tabs + mobile features renderer
+            // -----------------------------
+            const tabs = Array.from(document.querySelectorAll(".price-tab"));
+            const mobileFeatures = document.getElementById("mobileFeatures");
+
+            function setTabStyles() {
+                tabs.forEach((t) => {
+                    const selected = t.getAttribute("aria-selected") === "true";
+                    t.classList.toggle("bg-white", selected);
+                    t.classList.toggle("shadow-sm", selected);
+                    t.classList.toggle("ring-1", selected);
+                    t.classList.toggle("ring-black/5", selected);
+                });
+            }
+
+            function getActivePlan() {
+                return document.querySelector(".price-tab[aria-selected='true']")?.getAttribute("data-plan") || "launch";
+            }
+
+            function renderMobileHeader(planKey) {
+                const p = plans[planKey];
+                document.getElementById("mPlanName").textContent = p.name;
+                document.getElementById("mPrice").textContent = money(p.price);
+                document.getElementById("mPeriod").textContent = " / " + (p.period === "month" ? "month" : "one-time");
+                document.getElementById("mCta").setAttribute("href", p.cta);
+
+                // Accent CTA color for mobile (still readable)
+                const cta = document.getElementById("mCta");
+                cta.classList.remove("bg-red-600", "bg-green-600", "bg-blue-600", "hover:bg-red-700", "hover:bg-green-700", "hover:bg-blue-700");
+                if (p.color === "red") cta.classList.add("bg-red-600", "hover:bg-red-700");
+                if (p.color === "green") cta.classList.add("bg-green-600", "hover:bg-green-700");
+                if (p.color === "blue") cta.classList.add("bg-blue-600", "hover:bg-blue-700");
+            }
+
+            function renderMobileFeatures(planKey) {
+                if (!mobileFeatures) return;
+                const p = plans[planKey];
+
+                const html = sections
+                    .map((sec) => {
+                        const items = sec.rows
+                            .map((r) => {
+                                const included = !!r[planKey];
+                                const icon = included ? iconYes(p.color) : iconNo();
+                                return `
+                <li class="flex gap-3">
+                  <div class="pt-0.5">${icon}</div>
+                  <div>
+                    <div class="text-sm font-semibold text-slate-800">${r.label}</div>
+                    ${r.info ? `<div class="mt-1 text-xs text-slate-500">${r.info}</div>` : ""}
+                  </div>
+                </li>
+              `;
+                            })
+                            .join("");
+
+                        return `
+            <div class="rounded-2xl bg-slate-50 p-4 ring-1 ring-black/5">
+              <div class="text-sm font-extrabold text-slate-900">${sec.title}</div>
+              <ul class="mt-4 space-y-3">${items}</ul>
+            </div>
+          `;
+                    })
+                    .join("");
+
+                mobileFeatures.innerHTML = html;
+            }
+
+            tabs.forEach((tab) => {
+                tab.addEventListener("click", () => {
+                    tabs.forEach((t) => t.setAttribute("aria-selected", "false"));
+                    tab.setAttribute("aria-selected", "true");
+                    setTabStyles();
+
+                    const planKey = tab.getAttribute("data-plan") || "launch";
+                    renderMobileHeader(planKey);
+                    renderMobileFeatures(planKey);
+                    updatePriceDisplays();
+                });
+            });
+
+            // Initial paint
+            setTabStyles();
+            const initKey = getActivePlan();
+            renderMobileHeader(initKey);
+            renderMobileFeatures(initKey);
+            updatePriceDisplays();
+        })();
+    </script>
 
 
 
