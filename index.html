@@ -1714,81 +1714,6 @@
 
 
     <script>
-        // =========================
-        // Demo countdown (edit end date)
-        // =========================
-        const END_AT = new Date(Date.now() + 1000 * 60 * 60 * 24 * 28); // demo: 28 days from now
-
-        const pad2 = (n) => String(n).padStart(2, "0");
-
-        function tickCountdown() {
-            const now = new Date();
-            const diff = END_AT - now;
-
-            const total = Math.max(0, diff);
-            const sec = Math.floor(total / 1000);
-
-            const days = Math.floor(sec / 86400);
-            const hours = Math.floor((sec % 86400) / 3600);
-            const mins = Math.floor((sec % 3600) / 60);
-            const secs = sec % 60;
-
-            const dEl = document.getElementById("cdDays");
-            const hEl = document.getElementById("cdHours");
-            const mEl = document.getElementById("cdMins");
-            const sEl = document.getElementById("cdSecs");
-
-            if (dEl) dEl.textContent = pad2(days);
-            if (hEl) hEl.textContent = pad2(hours);
-            if (mEl) mEl.textContent = pad2(mins);
-            if (sEl) sEl.textContent = pad2(secs);
-        }
-        tickCountdown();
-        setInterval(tickCountdown, 1000);
-
-        // =========================
-        // Dropdowns (Products, Resources)
-        // =========================
-        const triggers = document.querySelectorAll("[data-dd-trigger]");
-        const panels = document.querySelectorAll("[data-dd-panel]");
-
-        function closeAllDropdowns() {
-            panels.forEach(p => p.classList.add("hidden"));
-            triggers.forEach(t => t.setAttribute("aria-expanded", "false"));
-        }
-
-        triggers.forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                const key = btn.getAttribute("data-dd-trigger");
-                const panel = document.querySelector(`[data-dd-panel="${key}"]`);
-
-                const isOpen = !panel.classList.contains("hidden");
-                closeAllDropdowns();
-                if (!isOpen) {
-                    panel.classList.remove("hidden");
-                    btn.setAttribute("aria-expanded", "true");
-                }
-            });
-        });
-
-        document.addEventListener("click", closeAllDropdowns);
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") closeAllDropdowns();
-        });
-
-        // =========================
-        // Mobile menu
-        // =========================
-        const mobileBtn = document.getElementById("mobileBtn");
-        const mobileMenu = document.getElementById("mobileMenu");
-
-        mobileBtn?.addEventListener("click", () => {
-            const isOpen = mobileBtn.getAttribute("aria-expanded") === "true";
-            mobileBtn.setAttribute("aria-expanded", String(!isOpen));
-            mobileMenu.classList.toggle("hidden");
-            closeAllDropdowns();
-        });
 
 
 
@@ -1803,88 +1728,12 @@
 
 
 
-        // Hero Aninmation (optional)
-        // You can add some simple animations to the hero section elements if desired.
-
-        // Simple reveal animation (works with Tailwind utilities)
-        (function () {
-            const targets = document.querySelectorAll('section [data-reveal], section .reveal-on');
-
-            // If you didn't add any data-reveal attributes, we auto-apply to key hero blocks:
-            const auto = [];
-            const hero = document.querySelector('section'); // the hero section you just pasted
-            if (hero) {
-                auto.push(...hero.querySelectorAll('h1, p, a, img, .rounded-3xl, .rounded-full'));
-            }
-
-            const items = targets.length ? targets : auto;
-
-            items.forEach((el) => {
-                el.classList.add('transition', 'duration-700', 'ease-out', 'opacity-0', 'translate-y-2');
-            });
-
-            const io = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((e) => {
-                        if (e.isIntersecting) {
-                            e.target.classList.remove('opacity-0', 'translate-y-2');
-                            e.target.classList.add('opacity-100', 'translate-y-0');
-                            io.unobserve(e.target);
-                        }
-                    });
-                },
-                { threshold: 0.12 }
-            );
-
-            items.forEach((el) => io.observe(el));
-        })();
 
 
-        // <!-- JS (add once, near bottom of page). Handles tab switching for the section above. -->
 
-        (function () {
-            const tabs = Array.from(document.querySelectorAll('.ps-tab'));
-            const panels = Array.from(document.querySelectorAll('.ps-panel'));
 
-            function setActive(key) {
-                // tabs
-                tabs.forEach(btn => {
-                    const isActive = btn.dataset.psTab === key;
-                    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
-                    btn.classList.toggle('text-black/50', !isActive);
-                    btn.classList.toggle('text-black', isActive);
 
-                    const underline = btn.querySelector('.ps-underline');
-                    if (underline) underline.classList.toggle('hidden', !isActive);
-                });
 
-                // panels
-                panels.forEach(p => {
-                    p.classList.toggle('hidden', p.dataset.psPanel !== key);
-                });
-            }
-
-            // click
-            tabs.forEach(btn => {
-                btn.addEventListener('click', () => setActive(btn.dataset.psTab));
-            });
-
-            // keyboard (left/right arrows)
-            tabs.forEach((btn, idx) => {
-                btn.addEventListener('keydown', (e) => {
-                    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-                    e.preventDefault();
-                    const nextIdx = e.key === 'ArrowRight'
-                        ? (idx + 1) % tabs.length
-                        : (idx - 1 + tabs.length) % tabs.length;
-                    tabs[nextIdx].focus();
-                    setActive(tabs[nextIdx].dataset.psTab);
-                });
-            });
-
-            // default
-            setActive('biz');
-        })();
 
 
         // =========================
