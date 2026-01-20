@@ -331,7 +331,7 @@
                         <!-- Left text -->
                         <div class="lg:pr-6 lg:text-right">
                             <span
-                                class="inline-flex rounded-md bg-amber-100 px-3 py-1 text-xs font-semibold text-slate-900">
+                                class="inline-flex rounded-md bg-red-100 px-3 py-1 text-xs font-semibold text-slate-900">
                                 Phase 1
                             </span>
                             <h3 class="mt-4 text-lg font-extrabold leading-snug text-slate-900 sm:text-xl">
@@ -1455,12 +1455,12 @@
 
                     if (!node || !dot) return;
 
-                    node.classList.toggle("border-amber-400", isDone);
+                    node.classList.toggle("border-red-400", isDone);
                     node.classList.toggle("ring-4", isDone);
-                    node.classList.toggle("ring-amber-200/60", isDone);
+                    node.classList.toggle("ring-red-200/60", isDone);
 
-                    dot.classList.toggle("bg-amber-500", isDone);
-                    dot.classList.toggle("bg-amber-200", !isDone);
+                    dot.classList.toggle("bg-red-500", isDone);
+                    dot.classList.toggle("bg-red-200", !isDone);
                 });
 
                 updateProgressHeight();
