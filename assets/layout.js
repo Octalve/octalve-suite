@@ -143,7 +143,7 @@
   function bootCountdown() {
     // CHANGE THIS DATE to your real promo end date/time
     // Example: 2026-01-31 23:59:59 Nigeria time (+01:00)
-    const PROMO_END = "2026-01-31T23:59:59+01:00";
+    const PROMO_END = "2026-02-28T23:59:59+01:00";
 
     if (startCountdown(PROMO_END)) return;
 
