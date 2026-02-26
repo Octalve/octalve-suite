@@ -1679,6 +1679,315 @@
 
 
 
+    <!-- Portfolio Showcase Grid (HTML + TailwindCSS + Vanilla JS)
+     - Modern cards, soft shadows, no black overlay
+     - Mobile responsive (1 col -> 2 col -> 3 col)
+     - Easy to add more projects: edit the JS "projects" array only
+-->
+
+    <section id="portfolio" class="bg-white">
+        <div class="mx-auto max-w-7xl px-5 py-14 sm:px-6 sm:py-16 lg:py-24">
+            <!-- Header -->
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <p class="text-sm font-semibold tracking-[0.22em] text-slate-500">PORTFOLIO</p>
+                    <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+                        Featured Projects.
+                    </h2>
+                    <p class="mt-3 max-w-2xl text-base text-slate-600">
+                        A selection of our recent work across various industries. We focus on clean, modern design
+                        that drives results.
+                    </p>
+                </div>
+
+                <!-- Optional filter -->
+                <div class="flex items-center gap-2">
+                    <button type="button" data-filter="all"
+                        class="filter-btn rounded-full bg-slate-900 px-4 py-2 text-sm font-bold text-white shadow-sm shadow-slate-900/10 hover:opacity-90">
+                        All
+                    </button>
+                    <button type="button" data-filter="Website"
+                        class="filter-btn rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-700 ring-1 ring-slate-200 shadow-sm shadow-slate-900/5 hover:bg-slate-50">
+                        Website
+                    </button>
+                    <button type="button" data-filter="Branding"
+                        class="filter-btn rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-700 ring-1 ring-slate-200 shadow-sm shadow-slate-900/5 hover:bg-slate-50">
+                        Branding
+                    </button>
+                    <button type="button" data-filter="NGO"
+                        class="filter-btn rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-700 ring-1 ring-slate-200 shadow-sm shadow-slate-900/5 hover:bg-slate-50">
+                        NGO
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grid -->
+            <div id="portfolioGrid" class="mt-10 grid gap-6 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3"></div>
+        </div>
+    </section>
+
+    <script>
+        (function () {
+            // =========================================================
+            // Add more projects here (ONLY here)
+            // =========================================================
+            const projects = [
+                {
+                    title: "Gravitas",
+                    subtitle: "Assest Security Company",
+                    description:
+                        "They are brokers who help you manage your funds and invest in the right assets; as you focus on your business, they help you reach your financial milestones side by side",
+                    tags: ["Logo", "Branding", "Components", "Finance"],
+                    type: "NGO", // product | ui | other
+                    image:
+                        "/brand/portfolio/octalve portfolio 1.png",
+                    // Optional: link to project
+                    link: "#",
+                    // Optional: logo text fallback
+                    brand: "Gravitas",
+                },
+
+
+                {
+                    title: "IHHC",
+                    subtitle: "Business consulting firm",
+                    description:
+                        "IHHC is a business consulting firm that provides expert guidance and strategic solutions to help businesses thrive in a competitive market.",
+                    tags: ["Logo", "Branding", "Components", "Consulting"],
+                    type: "Branding",
+                    image:
+                        "/brand/portfolio/octalve portfolio 2.png",
+                    link: "#",
+                    brand: "IHHC",
+                },
+
+
+
+                {
+                    title: "Heliox",
+                    subtitle: "Security and Renewable Energy",
+                    description:
+                        "Where sustainable energy meets smart security. From solar installations to high-tier surveillance, they provide the backbone for your growth.",
+                    tags: ["Logo", "Branding", "Components", "Energy"],
+                    type: "Branding",
+                    image:
+                        "/brand/portfolio/octalve portfolio 3.png",
+                    link: "#",
+                    brand: "Heliox",
+                },
+
+
+
+                {
+                    title: "SafeDeenHQ",
+                    subtitle: "Cybersecurity for Muslim Kids",
+                    description:
+                        "SafeDeen is an interactive learning platform that guides Muslim children in today’s digital world. Through fun, relatable lessons, quizzes, and stories.",
+                    tags: ["Logo", "Branding", "Components", "Islamic"],
+                    type: "NGO",
+                    image:
+                        "/brand/portfolio/octalve portfolio 4.png",
+                    link: "#",
+                    brand: "SafeDeenHQ",
+                },
+
+
+
+                {
+                    title: "Arin Jewellery",
+                    subtitle: "Jewellery and Royal Accessories brand",
+                    description:
+                        "True luxury isn't just worn; it is inherited. Arin Jeweleries and Royals merges timeless craftsmanship with modern elegance. Deals with gold, diamonds, and Wrist Watch",
+                    tags: ["Logo", "Branding", "Components", "Jewellery"],
+                    type: "Branding",
+                    image:
+                        "/brand/portfolio/octalve portfolio 5.png",
+                    link: "#",
+                    brand: "Arin",
+                },
+
+                {
+                    title: "Emprofit Solutions",
+                    subtitle: "Digital Agency",
+                    description:
+                        "Emprofit Solutions, where innovation meets impact. We are a digital agency dedicated to crafting compelling brand identities and seamless user experiences.",
+                    tags: ["Logo", "Branding", "Components", "Agency"],
+                    type: "Website",
+                    image:
+                        "/brand/portfolio/octalve portfolio 6.png",
+                    link: "#",
+                    brand: "Emprofit",
+                },
+
+
+
+
+                // Add more:
+                // { title, subtitle, description, tags:[], type, image, link, brand }
+            ];
+
+            // =========================================================
+            // Render
+            // =========================================================
+            const grid = document.getElementById("portfolioGrid");
+            if (!grid) return;
+
+            const chip = (t) =>
+                `<span class="inline-flex items-center rounded-full bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700 ring-1 ring-slate-200">
+        ${escapeHtml(t)}
+      </span>`;
+
+            function card(p) {
+                const href = p.link && p.link !== "#" ? p.link : "#";
+                const hasLink = p.link && p.link !== "#";
+
+                return `
+        <article
+          class="portfolio-card group overflow-hidden rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm shadow-slate-900/5 hover:shadow-md hover:shadow-slate-900/10 transition"
+          data-type="${escapeHtml(p.type || "other")}"
+        >
+
+
+
+          <!-- Media HIGHT (Image Size) -->
+          <div class="relative">
+            <div class="aspect-[full] w-full overflow-hidden bg-slate-100">
+              <img
+                src="${escapeAttr(p.image)}"
+                alt="${escapeAttr(p.title)} preview"
+                class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                loading="lazy"
+              />
+            </div>
+
+            <!-- Soft glass label (no black overlay) -->
+            <div class="absolute left-5 bottom-5">
+              <div class="rounded-2xl bg-white/80 px-4 py-2 backdrop-blur-md ring-1 ring-white/70 shadow-sm shadow-slate-900/10">
+                <div class="text-base font-extrabold text-slate-900">${escapeHtml(p.brand || p.title)}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="p-6">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-lg font-extrabold text-slate-900">${escapeHtml(p.title)}</h3>
+                <p class="mt-1 text-sm font-semibold text-slate-500">${escapeHtml(p.subtitle || "")}</p>
+              </div>
+
+              <span class="inline-flex rounded-full bg-slate-50 px-3 py-1 text-xs font-extrabold text-slate-700 ring-1 ring-slate-200">
+                ${escapeHtml((p.type || "other").toUpperCase())}
+              </span>
+            </div>
+
+            <p class="mt-4 text-sm leading-relaxed text-slate-700">
+              ${escapeHtml(p.description)}
+            </p>
+
+            <!-- Tags -->
+            <div class="mt-5 flex flex-wrap gap-2">
+              ${(p.tags || []).slice(0, 6).map(chip).join("")}
+            </div>
+
+
+
+
+
+            <!-- CTA Not in use for now -->
+
+
+             <!--
+
+            <div class="mt-6"> 
+              <a
+                href="${escapeAttr(href)}"
+                ${hasLink ? `target="_blank" rel="noreferrer"` : ``}
+                class="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-extrabold text-slate-900 ring-1 ring-slate-200 shadow-sm shadow-slate-900/5 hover:bg-slate-50 hover:shadow-md hover:shadow-slate-900/10 transition"
+              >
+                View Project
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M14 3h7v7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M10 14L21 3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M21 14v6a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div> -->
+
+            
+          </div>
+        </article>
+      `;
+            }
+
+            function render(list) {
+                grid.innerHTML = list.map(card).join("");
+            }
+
+            // =========================================================
+            // Filters
+            // =========================================================
+            const filterBtns = Array.from(document.querySelectorAll(".filter-btn"));
+
+            function setActiveBtn(btn) {
+                filterBtns.forEach((b) => {
+                    const active = b === btn;
+                    b.classList.toggle("bg-slate-900", active);
+                    b.classList.toggle("text-white", active);
+                    b.classList.toggle("shadow-slate-900/10", active);
+                    b.classList.toggle("bg-white", !active);
+                    b.classList.toggle("text-slate-700", !active);
+                    b.classList.toggle("ring-1", !active);
+                    b.classList.toggle("ring-slate-200", !active);
+                });
+            }
+
+            filterBtns.forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const f = btn.getAttribute("data-filter");
+                    setActiveBtn(btn);
+
+                    if (!f || f === "all") {
+                        render(projects);
+                        return;
+                    }
+                    render(projects.filter((p) => (p.type || "other") === f));
+                });
+            });
+
+            // =========================================================
+            // Safe escaping (so you can paste content safely)
+            // =========================================================
+            function escapeHtml(str) {
+                return String(str ?? "")
+                    .replaceAll("&", "&amp;")
+                    .replaceAll("<", "&lt;")
+                    .replaceAll(">", "&gt;")
+                    .replaceAll('"', "&quot;")
+                    .replaceAll("'", "&#039;");
+            }
+            function escapeAttr(str) {
+                // minimal attribute escape
+                return escapeHtml(str).replaceAll("`", "&#096;");
+            }
+
+            // Initial render
+            render(projects);
+        })();
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- FOOTER SECTION -->
 
     <div data-include="/components/footer.html"></div>
