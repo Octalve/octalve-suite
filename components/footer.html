@@ -138,11 +138,14 @@
                 </div>
             </div>
 
-            <a id="octWaSend" href="#" target="_blank" rel="noopener"
+            <a id="octWaSend"
+                href="https://wa.me/2348073459090?text=Hello%20Octalve%20Suite%20%F0%9F%91%8B%0AI%E2%80%99d%20like%20to%20make%20an%20enquiry."
+                target="_blank" rel="noopener"
                 class="w-full inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-extrabold text-white hover:opacity-95 transition"
                 style="background:#25D366;" aria-label="Send message on WhatsApp">
                 Continue on WhatsApp <span aria-hidden="true">›</span>
             </a>
+
         </div>
     </div>
 
@@ -182,161 +185,6 @@
     </div>
 </div>
 
-<script>
-    (function () {
-        // WhatsApp requires international format WITHOUT "+"
-        const PHONE = "2348073459090";
-        const STORAGE_KEY = "oct_wa_draft_v1";
-
-        function getEls() {
-            return {
-                btn: document.getElementById("octWaBtn"),
-                card: document.getElementById("octWaCard"),
-                close: document.getElementById("octWaClose"),
-                send: document.getElementById("octWaSend"),
-                text: document.getElementById("octWaText"),
-                reset: document.getElementById("octWaReset"),
-                badge: document.getElementById("octWaBadge"),
-            };
-        }
-
-        function pageName() {
-            const path = (location.pathname || "/").replace(/\/+$/, "") || "/";
-            return path === "/" ? "Home" : path.split("/").filter(Boolean).slice(-1)[0];
-        }
-
-        function defaultMessage() {
-            return `Hello Octalve Suite 👋
-I’m a Founder / Business Owner / NGO based in Abuja.
-
-I’d like to learn more about your services and the best next step for my project.
-
-Page: ${pageName()}
-Service: (Branding / Website / Launch / Impact / Growth)
-Timeline: (This week / This month)
-Budget range: (Optional)`;
-        }
-
-        function waUrl(msg) {
-            // Using api.whatsapp.com tends to be very compatible across devices
-            const text = encodeURIComponent(msg || "");
-            return `https://api.whatsapp.com/send?phone=${PHONE}&text=${text}`;
-            // Alternative:
-            // return `https://wa.me/${PHONE}?text=${text}`;
-        }
-
-        function openCard() {
-            const { card, text, send } = getEls();
-            if (!card || !text || !send) return;
-
-            const saved = localStorage.getItem(STORAGE_KEY);
-            text.value = (saved && saved.trim()) ? saved : defaultMessage();
-
-            // Always keep link valid
-            send.href = waUrl(text.value);
-
-            card.classList.remove("hidden");
-            card.setAttribute("aria-hidden", "false");
-        }
-
-        function closeCard() {
-            const { card, badge } = getEls();
-            if (!card) return;
-
-            card.classList.add("hidden");
-            card.setAttribute("aria-hidden", "true");
-
-            // keep badge visible as "pending/draft"
-            if (badge) badge.classList.remove("hidden");
-        }
-
-        function syncDraft() {
-            const { text, send } = getEls();
-            if (!text || !send) return;
-            localStorage.setItem(STORAGE_KEY, text.value);
-            send.href = waUrl(text.value);
-        }
-
-        function resetDraft() {
-            const { text, send, badge } = getEls();
-            if (!text || !send) return;
-
-            text.value = defaultMessage();
-            localStorage.setItem(STORAGE_KEY, text.value);
-            send.href = waUrl(text.value);
-
-            if (badge) badge.classList.remove("hidden");
-            text.focus();
-        }
-
-        function sendToWhatsApp(e) {
-            const { text, send, badge } = getEls();
-            if (!text || !send) return;
-
-            const msg = text.value && text.value.trim() ? text.value : defaultMessage();
-            localStorage.setItem(STORAGE_KEY, msg);
-
-            const url = waUrl(msg);
-
-            // Ensure it opens even if href was still '#'
-            e.preventDefault();
-
-            // Try opening in new tab, fallback to same tab
-            const win = window.open(url, "_blank", "noopener,noreferrer");
-            if (!win) window.location.href = url;
-
-            // Hide badge after they proceed
-            if (badge) badge.classList.add("hidden");
-        }
-
-        // ✅ Event delegation: works even if footer HTML is injected later
-        document.addEventListener("click", function (e) {
-            const t = e.target;
-
-            // Toggle card
-            if (t && (t.id === "octWaBtn" || (t.closest && t.closest("#octWaBtn")))) {
-                const { card } = getEls();
-                if (!card) return;
-
-                if (card.classList.contains("hidden")) openCard();
-                else closeCard();
-                return;
-            }
-
-            // Close
-            if (t && (t.id === "octWaClose" || (t.closest && t.closest("#octWaClose")))) {
-                e.preventDefault();
-                closeCard();
-                return;
-            }
-
-            // Reset
-            if (t && (t.id === "octWaReset" || (t.closest && t.closest("#octWaReset")))) {
-                e.preventDefault();
-                resetDraft();
-                return;
-            }
-
-            // Send
-            if (t && (t.id === "octWaSend" || (t.closest && t.closest("#octWaSend")))) {
-                sendToWhatsApp(e);
-                return;
-            }
-        });
-
-        // Draft typing
-        document.addEventListener("input", function (e) {
-            const t = e.target;
-            if (t && t.id === "octWaText") syncDraft();
-        });
-
-        // Optional: if card is already visible for any reason, make sure link is valid
-        window.addEventListener("load", function () {
-            const { card } = getEls();
-            if (card && !card.classList.contains("hidden")) openCard();
-        });
-    })();
-</script>
 
 
 
