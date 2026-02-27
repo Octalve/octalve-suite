@@ -65,6 +65,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <!-- =========================
   Octalve WhatsApp Side Chat (Global)
 ========================== -->
@@ -178,90 +188,155 @@
         const PHONE = "2348073459090";
         const STORAGE_KEY = "oct_wa_draft_v1";
 
-        const btn = document.getElementById("octWaBtn");
-        const card = document.getElementById("octWaCard");
-        const close = document.getElementById("octWaClose");
-        const send = document.getElementById("octWaSend");
-        const text = document.getElementById("octWaText");
-        const reset = document.getElementById("octWaReset");
-        const badge = document.getElementById("octWaBadge");
+        function getEls() {
+            return {
+                btn: document.getElementById("octWaBtn"),
+                card: document.getElementById("octWaCard"),
+                close: document.getElementById("octWaClose"),
+                send: document.getElementById("octWaSend"),
+                text: document.getElementById("octWaText"),
+                reset: document.getElementById("octWaReset"),
+                badge: document.getElementById("octWaBadge"),
+            };
+        }
 
-        if (!btn || !card || !close || !send || !text || !reset) return;
+        function pageName() {
+            const path = (location.pathname || "/").replace(/\/+$/, "") || "/";
+            return path === "/" ? "Home" : path.split("/").filter(Boolean).slice(-1)[0];
+        }
 
-        const pagePath = (location.pathname || "/");
-        const cleanPath = pagePath.replace(/\/+$/, "") || "/";
-        const pageName = cleanPath === "/" ? "Home" : cleanPath.split("/").filter(Boolean).slice(-1)[0];
-
-        const defaultMessage =
-            `Hello Octalve Suite 👋
+        function defaultMessage() {
+            return `Hello Octalve Suite 👋
 I’m a Founder / Business Owner / NGO based in Abuja.
 
 I’d like to learn more about your services and the best next step for my project.
 
-Page: ${pageName}
+Page: ${pageName()}
 Service: (Branding / Website / Launch / Impact / Growth)
 Timeline: (This week / This month)
 Budget range: (Optional)`;
+        }
 
-        function buildWhatsAppUrl(msg) {
-            return "https://wa.me/" + PHONE + "?text=" + encodeURIComponent(msg || "");
+        function waUrl(msg) {
+            // Using api.whatsapp.com tends to be very compatible across devices
+            const text = encodeURIComponent(msg || "");
+            return `https://api.whatsapp.com/send?phone=${PHONE}&text=${text}`;
+            // Alternative:
+            // return `https://wa.me/${PHONE}?text=${text}`;
         }
 
         function openCard() {
-            // Load draft from storage or use default
-            const saved = localStorage.getItem(STORAGE_KEY);
-            text.value = (saved && saved.trim().length > 0) ? saved : defaultMessage;
+            const { card, text, send } = getEls();
+            if (!card || !text || !send) return;
 
-            // Ensure link is correct
-            send.href = buildWhatsAppUrl(text.value);
+            const saved = localStorage.getItem(STORAGE_KEY);
+            text.value = (saved && saved.trim()) ? saved : defaultMessage();
+
+            // Always keep link valid
+            send.href = waUrl(text.value);
 
             card.classList.remove("hidden");
             card.setAttribute("aria-hidden", "false");
         }
 
         function closeCard() {
+            const { card, badge } = getEls();
+            if (!card) return;
+
             card.classList.add("hidden");
             card.setAttribute("aria-hidden", "true");
 
-            // restore badge on close (still a draft unless they actually send)
+            // keep badge visible as "pending/draft"
             if (badge) badge.classList.remove("hidden");
         }
 
-        // Toggle card
-        btn.addEventListener("click", function () {
-            if (card.classList.contains("hidden")) openCard();
-            else closeCard();
-        });
-
-        // Close
-        close.addEventListener("click", closeCard);
-
-        // Keep draft updated + persist across pages
-        text.addEventListener("input", function () {
+        function syncDraft() {
+            const { text, send } = getEls();
+            if (!text || !send) return;
             localStorage.setItem(STORAGE_KEY, text.value);
-            send.href = buildWhatsAppUrl(text.value);
-        });
+            send.href = waUrl(text.value);
+        }
 
-        // Reset draft
-        reset.addEventListener("click", function (e) {
-            e.preventDefault();
-            text.value = defaultMessage;
+        function resetDraft() {
+            const { text, send, badge } = getEls();
+            if (!text || !send) return;
+
+            text.value = defaultMessage();
             localStorage.setItem(STORAGE_KEY, text.value);
-            send.href = buildWhatsAppUrl(text.value);
+            send.href = waUrl(text.value);
+
             if (badge) badge.classList.remove("hidden");
             text.focus();
+        }
+
+        function sendToWhatsApp(e) {
+            const { text, send, badge } = getEls();
+            if (!text || !send) return;
+
+            const msg = text.value && text.value.trim() ? text.value : defaultMessage();
+            localStorage.setItem(STORAGE_KEY, msg);
+
+            const url = waUrl(msg);
+
+            // Ensure it opens even if href was still '#'
+            e.preventDefault();
+
+            // Try opening in new tab, fallback to same tab
+            const win = window.open(url, "_blank", "noopener,noreferrer");
+            if (!win) window.location.href = url;
+
+            // Hide badge after they proceed
+            if (badge) badge.classList.add("hidden");
+        }
+
+        // ✅ Event delegation: works even if footer HTML is injected later
+        document.addEventListener("click", function (e) {
+            const t = e.target;
+
+            // Toggle card
+            if (t && (t.id === "octWaBtn" || (t.closest && t.closest("#octWaBtn")))) {
+                const { card } = getEls();
+                if (!card) return;
+
+                if (card.classList.contains("hidden")) openCard();
+                else closeCard();
+                return;
+            }
+
+            // Close
+            if (t && (t.id === "octWaClose" || (t.closest && t.closest("#octWaClose")))) {
+                e.preventDefault();
+                closeCard();
+                return;
+            }
+
+            // Reset
+            if (t && (t.id === "octWaReset" || (t.closest && t.closest("#octWaReset")))) {
+                e.preventDefault();
+                resetDraft();
+                return;
+            }
+
+            // Send
+            if (t && (t.id === "octWaSend" || (t.closest && t.closest("#octWaSend")))) {
+                sendToWhatsApp(e);
+                return;
+            }
         });
 
-        // When sending, hide the DRAFT badge (message is no longer pending)
-        send.addEventListener("click", function () {
-            localStorage.setItem(STORAGE_KEY, text.value);
-            if (badge) badge.classList.add("hidden");
-            // (we keep the draft saved; remove it only if you want)
-            // localStorage.removeItem(STORAGE_KEY);
+        // Draft typing
+        document.addEventListener("input", function (e) {
+            const t = e.target;
+            if (t && t.id === "octWaText") syncDraft();
+        });
+
+        // Optional: if card is already visible for any reason, make sure link is valid
+        window.addEventListener("load", function () {
+            const { card } = getEls();
+            if (card && !card.classList.contains("hidden")) openCard();
         });
     })();
 </script>
-
 
 
 
